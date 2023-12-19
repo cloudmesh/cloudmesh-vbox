@@ -1,0 +1,5 @@
+
+bumpversion:
+- VERSION
+- src/cloudmesh/vbox/__version__.py
+- src/cloudmesh/vbox/__init__.py
