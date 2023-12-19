@@ -1,12 +1,12 @@
-from cloudmesh.compute.libcloud.Provider import CloudmeshComputeABC
+from cloudmesh.abstract.ComputeNodeABC import ComputeNodeABC
 import subprocess
 import json
 import re
 import time
 import json
 
-class Vbox(CloudmeshComputeABC):
 
+class Vbox(ComputeNodeABC):
     def __init__(self):
         """
         Initialize the Vbox class.
@@ -36,18 +36,20 @@ class Vbox(CloudmeshComputeABC):
         Returns:
             str: A JSON string representing the list of VMs.
         """
-        output = self._run(['VBoxManage', 'list', 'vms'])
+        output = self._run(["VBoxManage", "list", "vms"])
         lines = output.splitlines()
         vms = []
         for line in lines:
             match = re.match(r'^"(.+)" {(.+)}$', line)
             if match:
-                vms.append({
-                    'name': match.group(1),
-                    'UUID': match.group(2),
-                })
+                vms.append(
+                    {
+                        "name": match.group(1),
+                        "UUID": match.group(2),
+                    }
+                )
         return json.dumps(vms)
-    
+
     def start(self, name=None):
         """
         Start a VM.
@@ -61,7 +63,7 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        return self._run(['VBoxManage', 'startvm', name])
+        return self._run(["VBoxManage", "startvm", name])
 
     def stop(self, name=None):
         """
@@ -76,8 +78,8 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        return self._run(['VBoxManage', 'controlvm', name, 'poweroff'])
-    
+        return self._run(["VBoxManage", "controlvm", name, "poweroff"])
+
     def info(self, name=None):
         """
         Get information about a VM.
@@ -91,7 +93,7 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        output = self._run(['VBoxManage', 'showvminfo', name, '--machinereadable'])
+        output = self._run(["VBoxManage", "showvminfo", name, "--machinereadable"])
         lines = output.splitlines()
         info = {}
         for line in lines:
@@ -99,7 +101,7 @@ class Vbox(CloudmeshComputeABC):
             if match:
                 info[match.group(1)] = match.group(2)
         return json.dumps(info)
-    
+
     def suspend(self, name=None):
         """
         Suspend a VM.
@@ -113,8 +115,8 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        return self._run(['VBoxManage', 'controlvm', name, 'savestate'])
-    
+        return self._run(["VBoxManage", "controlvm", name, "savestate"])
+
     def resume(self, name=None):
         """
         Resume a VM.
@@ -128,8 +130,8 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        return self._run(['VBoxManage', 'startvm', name])
-    
+        return self._run(["VBoxManage", "startvm", name])
+
     def reboot(self, name=None):
         """
         Reboot a VM.
@@ -143,8 +145,8 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        return self._run(['VBoxManage', 'controlvm', name, 'reset'])
-    
+        return self._run(["VBoxManage", "controlvm", name, "reset"])
+
     def create(self, name=None, image=None, size=None, timeout=360, **kwargs):
         """
         Create a new VM.
@@ -172,8 +174,8 @@ class Vbox(CloudmeshComputeABC):
         if name is None or destination is None:
             raise ValueError("Both current and new VM names must be provided")
 
-        return self._run(['VBoxManage', 'modifyvm', name, '--name', destination])
-    
+        return self._run(["VBoxManage", "modifyvm", name, "--name", destination])
+
     def destroy(self, name=None):
         """
         Destroy a VM.
@@ -187,8 +189,8 @@ class Vbox(CloudmeshComputeABC):
         if name is None:
             raise ValueError("VM name must be provided")
 
-        return self._run(['VBoxManage', 'unregistervm', name, '--delete'])
-    
+        return self._run(["VBoxManage", "unregistervm", name, "--delete"])
+
     def set_server_metadata(self, name=None, **metadata):
         """
         Set metadata for a VM.
@@ -224,13 +226,13 @@ class Vbox(CloudmeshComputeABC):
         if vm is None or username is None:
             raise ValueError("Both VM IP address and username must be provided")
 
-        ssh_command = ['ssh', f'{username}@{vm}']
+        ssh_command = ["ssh", f"{username}@{vm}"]
         if command:
             ssh_command.append(command)
 
         result = subprocess.run(ssh_command, capture_output=True, text=True)
         return result.stdout
-    
+
     def run(self, vm=None, command=None):
         """
         Run a command on a VM.
@@ -245,12 +247,10 @@ class Vbox(CloudmeshComputeABC):
         if vm is None or command is None:
             raise ValueError("Both VM and command must be provided")
 
-        ssh_command = ['ssh', f'{self.username}@{vm}', command]
+        ssh_command = ["ssh", f"{self.username}@{vm}", command]
         result = subprocess.run(ssh_command, capture_output=True, text=True)
         return result.stdout
-    
 
-    
     def console(self, vm=None):
         raise
         """
@@ -274,15 +274,14 @@ class Vbox(CloudmeshComputeABC):
         if vm is None:
             raise ValueError("VM name must be provided")
 
-        output = self.run(vm, 'VBoxManage showvminfo --machinereadable')
-        for line in output.split('\n'):
+        output = self.run(vm, "VBoxManage showvminfo --machinereadable")
+        for line in output.split("\n"):
             if "Logfile" in line:
-                logfile = line.split('=')[1].strip().strip('"')
-                return self.run(vm, f'cat {logfile}')
+                logfile = line.split("=")[1].strip().strip('"')
+                return self.run(vm, f"cat {logfile}")
 
         return "No log file found"
 
-    
     def script(self, vm=None, script=None):
         """
         Run a script on a VM.
@@ -297,7 +296,7 @@ class Vbox(CloudmeshComputeABC):
         if vm is None or script is None:
             raise ValueError("Both VM and script must be provided")
 
-        commands = script.split('\n')
+        commands = script.split("\n")
         output = ""
 
         for command in commands:
@@ -305,7 +304,6 @@ class Vbox(CloudmeshComputeABC):
                 output += self.run(vm, command)
 
         return output
-    
 
     def wait(self, vm=None, state=None, interval=5, timeout=60):
         """
@@ -348,9 +346,9 @@ class Vbox(CloudmeshComputeABC):
         if vm is None:
             raise ValueError("VM name must be provided")
 
-        output = self._run(['VBoxManage', 'showvminfo', vm])
-        for line in output.split('\n'):
+        output = self._run(["VBoxManage", "showvminfo", vm])
+        for line in output.split("\n"):
             if "State:" in line:
-                return line.split(':')[1].strip()
+                return line.split(":")[1].strip()
 
         return "Unknown"
