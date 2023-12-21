@@ -21,7 +21,7 @@ maintainers = [
 ]
 keywords = ["helper library", "cloudmesh"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 1 - Planning",
     "Environment :: Console",
     "Environment :: Other Environment",
     "Environment :: Plugins",
@@ -51,8 +51,13 @@ classifiers = [
 dependencies = [
     "cloudmesh-cmd5",
 ]
+
 [project.urls]
-"Documentation" = "https://github.com/cloudmesh/cloudmesh-common"
+Homepage = "https://github.com/cloudmesh/cloudmesh-vbox"
+Documentation = "https://github.com/cloudmesh/cloudmesh-vbox/blob/main/README.md"
+Repository = "https://github.com/cloudmesh/cloudmesh-vbox.git"
+Issues = "https://github.com/cloudmesh/cloudmesh-vbox/issues"
+Changelog = "https://github.com/cloudmesh/cloudmesh-vbox/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src/"]
