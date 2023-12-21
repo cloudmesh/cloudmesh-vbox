@@ -191,6 +191,15 @@ class Vbox(ComputeNodeABC):
 
         return self._run(["VBoxManage", "unregistervm", name, "--delete"])
 
+    def get_server_metadata(self, name):
+        """
+        gets the metadata for the server
+
+        :param name: name of the fm
+        :return:
+        """
+        raise NotImplementedError
+
     def set_server_metadata(self, name=None, **metadata):
         """
         Set metadata for a VM.
@@ -352,3 +361,169 @@ class Vbox(ComputeNodeABC):
                 return line.split(":")[1].strip()
 
         return "Unknown"
+
+    def keys(self):
+        """
+        Lists the keys on the cloud
+
+        :return: dict
+        """
+        raise NotImplementedError
+
+    def key_upload(self, key=None):
+        """
+        uploads the key specified in the yaml configuration to the cloud
+        :param key:
+        :return:
+        """
+        raise NotImplementedError
+
+    def key_delete(self, name=None):
+        """
+        deletes the key with the given name
+        :param name: The name of the key
+        :return:
+        """
+        raise NotImplementedError
+
+    def images(self, **kwargs):
+        """
+        Lists the images on the cloud
+        :return: dict
+        """
+        raise NotImplementedError
+
+    def image(self, name=None):
+        """
+        Gets the image with a given nmae
+        :param name: The name of the image
+        :return: the dict of the image
+        """
+        raise NotImplementedError
+
+    def flavors(self, **kwargs):
+        """
+        Lists the flavors on the cloud
+
+        :return: dict of flavors
+        """
+        raise NotImplementedError
+
+    def flavor(self, name=None):
+        """
+        Gets the flavor with a given name
+        :param name: The name of the flavor
+        :return: The dict of the flavor
+        """
+        raise NotImplementedError
+
+    def reboot(self, name=None):
+        """
+        Reboot a list of nodes with the given names
+
+        :param name: A list of node names
+        :return:  A list of dict representing the nodes
+        """
+        raise NotImplementedError
+
+    def attach_public_ip(self, name=None, ip=None):
+        """
+        adds a public ip to the named vm
+
+        :param name: Name of the vm
+        :param ip: The ip address
+        :return:
+        """
+        raise NotImplementedError
+
+    def detach_public_ip(self, name=None, ip=None):
+        """
+        adds a public ip to the named vm
+
+        :param name: Name of the vm
+        :param ip: The ip address
+        :return:
+        """
+        raise NotImplementedError
+
+    def delete_public_ip(self, ip=None):
+        """
+        Deletes the ip address
+
+        :param ip: the ip address, if None than all will be deleted
+        :return:
+        """
+        raise NotImplementedError
+
+    def list_public_ips(self, available=False):
+        """
+        Lists the public ip addresses.
+
+        :param available: if True only those that are not allocated will be
+            returned.
+
+        :return:
+        """
+        raise NotImplementedError
+
+    def create_public_ip(self):
+        """
+        Creates a new public IP address to use
+
+        :return: The ip address information
+        """
+        raise NotImplementedError
+
+    def find_available_public_ip(self):
+        """
+        Returns a single public available ip address.
+
+        :return: The ip
+        """
+        raise NotImplementedError
+
+    def get_public_ip(self, name=None):
+        """
+        returns the public ip
+
+        :param name: name of the server
+        :return:
+        """
+        raise NotImplementedError
+
+    def list_secgroups(self, name=None):
+        """
+        List the named security group
+
+        :param name: The name of the group, if None all will be returned
+        :return:
+        """
+
+    def list_secgroup_rules(self, name="default"):
+        """
+        List the named security group
+
+        :param name: The name of the group, if None all will be returned
+        :return:
+        """
+        raise NotImplementedError
+
+    def upload_secgroup(self, name=None):
+        raise NotImplementedError
+
+    def add_secgroup(self, name=None, description=None):
+        raise NotImplementedError
+
+    def add_secgroup_rule(
+        self, name=None, port=None, protocol=None, ip_range=None  # group name
+    ):
+        raise NotImplementedError
+
+    def remove_secgroup(self, name=None):
+        raise NotImplementedError
+
+    def add_rules_to_secgroup(self, name=None, rules=None):
+        raise NotImplementedError
+
+    def remove_rules_from_secgroup(self, name=None, rules=None):
+        raise NotImplementedError
