@@ -60,5 +60,5 @@ Issues = "https://github.com/cloudmesh/cloudmesh-vbox/issues"
 Changelog = "https://github.com/cloudmesh/cloudmesh-vbox/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
-where = ["src/"]
+where = ["src"]
 include = ["cloudmesh.vbox", "cloudmesh.vbox.*"]
